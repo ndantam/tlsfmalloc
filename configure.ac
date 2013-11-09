@@ -37,19 +37,30 @@ m4_ifdef([APPEND_CFLAG],
 
 # Debugging
 AC_ARG_ENABLE([debug],
-        AS_HELP_STRING([--enable-debug], [Build for debugging]))
+              [AS_HELP_STRING([--enable-debug], [Build for debugging])])
 
 AS_IF([test "x$enable_debug" = "xyes"],
-      [
+      [AC_LANG([C])
+       APPEND_CFLAG([-fstack-check])],
+      [enable_debug=no
        AC_LANG([C])
-       APPEND_CFLAG([-fstack-check])
-      ],
-      [
-       enable_debug=no
-       AC_LANG([C])
-       APPEND_CFLAG([-DNDEBUG])
-      ]
-)
+       APPEND_CFLAG([-DNDEBUG])])
+
+AC_ARG_ENABLE([sbrk],
+              [AS_HELP_STRING([--disable-sbrk], [Do not use sbrk() to grow heap])])
+
+AS_IF([test "x$enable_sbrk" != "xno"],
+      [AC_DEFINE([USE_SBRK],[1],[Use sbrk() to grow heap])
+       enable_sbrk=yes],
+      [enable_sbrk=no])
+
+AC_ARG_ENABLE([mmap],
+              [AS_HELP_STRING([--disable-mmap], [Do not use mmap() to grow heap])])
+
+AS_IF([test "x$enable_mmap" != "xno"],
+      [AC_DEFINE([USE_MMAP],[1],[Use mmap() to grow heap])
+       enable_mmap=yes],
+      [enable_mmap=no])
 
 AC_CONFIG_FILES([Makefile])
 
@@ -58,5 +69,7 @@ AC_OUTPUT
 AC_MSG_NOTICE([])
 AC_MSG_NOTICE([CONFIGURATION SUMMARY])
 AC_MSG_NOTICE([=====================])
-AC_MSG_NOTICE([DEBUG:           $enable_debug])
 AC_MSG_NOTICE([PREFIX:          $prefix])
+AC_MSG_NOTICE([DEBUG:           $enable_debug])
+AC_MSG_NOTICE([USE_SBRK:        $enable_sbrk])
+AC_MSG_NOTICE([USE_MMAP:        $enable_mmap])

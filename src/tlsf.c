@@ -52,6 +52,10 @@
 /*#define USE_SBRK        (0) */
 /*#define USE_MMAP        (0) */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif //HAVE_CONFIG_H
+
 #ifndef USE_PRINTF
 #define USE_PRINTF      (1)
 #endif
