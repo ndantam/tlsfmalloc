@@ -40,25 +40,27 @@
  *
  */
 
-#include "tlsf.h"
 #include <stdio.h>
-#include <stdint.h>
+#include <stdarg.h>
+#include <unistd.h>
+#include <string.h>
 #include "private.h"
 
-void *malloc(size_t size);
-void free(void *ptr);
-void *calloc(size_t nmemb, size_t size);
-void *realloc(void *ptr, size_t size);
+void debug_out(const char *s) {
+    write( STDERR_FILENO, s, strlen(s) );
+}
 
-void *malloc(size_t size) {
-    return tlsf_malloc(size);
-}
-void free(void *ptr) {
-    tlsf_free(ptr);
-}
-void *calloc(size_t nmemb, size_t size) {
-    return tlsf_calloc(nmemb, size);
-}
-void *realloc(void *ptr, size_t size) {
-    return tlsf_realloc(ptr, size);
+static char buf[4096];
+void debugf( const char fmt[], ... ) {
+    puts("debugf1");
+    va_list ap;
+    va_start( ap, fmt );
+    puts("debugf2");
+    int n_char = vsnprintf( buf, sizeof(buf), fmt, ap );
+    puts("debugf3");
+    va_end( ap );
+    int n_buf = (int)sizeof(buf);
+    write( STDOUT_FILENO, buf,
+           (n_char > n_buf) ? n_buf : n_char );
+    puts("debugf3");
 }

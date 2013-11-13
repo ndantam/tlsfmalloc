@@ -40,25 +40,8 @@
  *
  */
 
-#include "tlsf.h"
 #include <stdio.h>
-#include <stdint.h>
-#include "private.h"
 
-void *malloc(size_t size);
-void free(void *ptr);
-void *calloc(size_t nmemb, size_t size);
-void *realloc(void *ptr, size_t size);
+void debugf( const char fmt[], ... );
 
-void *malloc(size_t size) {
-    return tlsf_malloc(size);
-}
-void free(void *ptr) {
-    tlsf_free(ptr);
-}
-void *calloc(size_t nmemb, size_t size) {
-    return tlsf_calloc(nmemb, size);
-}
-void *realloc(void *ptr, size_t size) {
-    return tlsf_realloc(ptr, size);
-}
+void debug_out(const char *s);
